@@ -1,4 +1,4 @@
-# DebugPerfmon
+# Perfmon Debug Toolbar
 
 Processwire module used in performance monitoring and optimization.
 
