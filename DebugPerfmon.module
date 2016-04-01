@@ -44,7 +44,7 @@ class DebugPerfmon extends WireData implements Module {
             'title' => 'Perfmon Debug Toolbar',
             'version' => 100,
             'summary' => 'Collects and displays debug information in a handy toolbar.',
-            'href' => 'http://www.keene.edu',
+            'href' => 'https://github.com/KeeneState/DebugPerfmon',
             'singular' => true,
             'autoload' => true,
         );
