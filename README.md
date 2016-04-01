@@ -31,8 +31,8 @@ Page historical data is stored in the browser's localStorage. Clearing the brows
 
 A collapsed toolbar in the upper right hand corner of the screen.
 
-![screencap](//www.keene.edu/ksc/assets/files/26766/collapsed.png)
+![screencap](http://www.keene.edu/ksc/assets/files/26766/collapsed.png)
 
 The expanded toolbar, viewing the timings panel.
 
-![screencap](//www.keene.edu/ksc/assets/files/26766/timings.png)
+![screencap](http://www.keene.edu/ksc/assets/files/26766/timings.png)
