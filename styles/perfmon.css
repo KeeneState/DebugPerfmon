@@ -1,0 +1,302 @@
+/* Copyright 2014-2016, Keene State College 
+Released under MIT license: http://opensource.org/licenses/MIT */
+
+#perfmon {
+    box-sizing: border-box;
+    position:absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    min-width: 1020px;
+    z-index:100;
+    font-size:14px;
+    font-family: "San Francisco","Roboto","Segoe UI","Helvetica Neue","Lucida Grande",sans-serif;
+    line-height:1.45;
+}
+
+#perfmon h1, #perfmon h2, #perfmon h3, #perfmon h4, #perfmon h5, #perfmon p, #perfmon td, #perfmon th, #perfmon div {
+    font-family: "San Francisco","Roboto","Segoe UI","Helvetica Neue","Lucida Grande",sans-serif;
+}
+
+#perfmon a {
+    text-decoration:none;
+    border:none;
+}
+
+#perfmon h2 {
+    font-size: 24px;
+    margin-top:0;
+    margin-bottom:1em
+}
+
+#perfmon h3 {
+    font-size: 14px;
+    margin-top:0;
+    margin-bottom:1em
+}
+
+#perfmon p {
+    margin:0em;
+}
+
+#perfmon .warn {
+   margin: 1em 0; 
+}
+
+#perfmon #perfmonHandle{
+    position: fixed;
+    top:2em;
+    right:0;
+    background-color: #222;
+    width: 2.25em;
+    height: 5em;
+    border: 3px solid #bbb;
+    border-right: 0px solid #555;
+    overflow:hidden;
+    z-index:3;
+    background: linear-gradient(0deg, #222, #444);
+    border-radius: 5px 0px 0px 5px;
+}
+
+#perfmon #perfmonHandle .logo {
+    font-family:arial narrow, arial;
+    line-height:1;
+    top: 1px;
+    left: 0px;
+    position:absolute;
+    font-weight:bold;
+    font-size:420%;
+    color: #444;
+    display:none;
+}
+
+#perfmon #perfmonHandle .time {
+    position:absolute;
+    top: 1.25em;
+    right: -2.3em;
+    font-size:110%;
+    transform: rotate(270deg);
+    width: 6em;
+    height: 2em;
+    text-align:center;
+    color:#eee;
+    
+}
+
+#perfmon #perfmonToolbar {
+    position: fixed;
+    display:none;
+    top: 0em;
+    right: -14em;
+    width: 14em;
+    height:100%;
+    background-color: #333;
+    z-index:2;
+    color:#eee;
+    font-size:100%;
+    border-left: 3px solid #bbb
+}
+
+#perfmon #perfmonToolbar .section {
+    color:#eee;
+    padding:1em;
+    border-top:1px solid #666;
+    border-bottom:1px solid #999;
+    text-decoration:none;
+    outline: none;
+}
+
+#perfmon #perfmonToolbar .section:hover {
+    background-color:#444;
+}
+
+#perfmon #perfmonToolbar .section.active {
+    background-color:#444;
+}
+
+#perfmon #perfmonToolbar .section:first-child {
+    border-top:none;
+}
+
+#perfmon #perfmonToolbar .section:last-child {
+    border-bottom:none;
+}
+
+#perfmon #perfmonToolbar a {
+    color:#eee;
+    display:block;
+}
+
+#perfmon #perfmonToolbar a:hover {
+    text-decoration:none;
+}
+
+#perfmon #perfmonToolbar .title {
+    font-size:120%;
+}
+
+#perfmon #perfmonToolbar .information {
+    font-size:100%;
+    color:#ccc;
+    margin-top:0.2em;
+}
+
+#perfmon #perfmonPanels {
+    min-height:100%;
+    background-color:#fcfcfc;
+    display:none;
+    margin-right: 14em;
+}
+
+#perfmon #perfmonPanels .section {
+    display:none;
+}
+
+#perfmon #perfmonPanels .title {
+    font-size:200%;
+    margin-bottom:0.2em;
+    background-color: #0072C6;
+    background: linear-gradient(to bottom, #0072C6 , #0065AD);
+    box-shadow: 0 4px 2px -2px rgba(0,0,0,0.3);
+    color:white;
+    padding:0.40rem 2rem;
+    border-bottom: 2px solid #005FA3;
+}
+
+#perfmon #perfmonPanels .title img {
+    width:32px;
+    margin-top:6px;
+    position:absolute;
+}
+
+#perfmon #perfmonPanels .title a {
+    color:white;
+    text-decoration:none;
+}
+
+#perfmon #perfmonPanels .information {
+    padding:1.5rem 2rem;
+}
+
+#perfmon #perfmonPanels .information table {
+    width:100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    padding:1px;
+}
+
+#perfmon #perfmonPanels .information td, #perfmon #perfmonPanels .information th{
+    border: 1px solid #ccc;
+    padding: 10px;    
+}
+#perfmon #perfmonPanels .information th{
+    text-align:left;
+    text-transform:uppercase;
+}
+
+.sqltable{
+    overflow:hidden;
+}
+
+.statement {
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+}
+
+#perfmon th, #perfmon tfoot td {
+    font-weight:bold;
+    background-color: #f4f4f4;
+}
+
+#perfmon .statement b {
+    color: #666;
+}
+
+#perfmon .timeline {
+    width:16em;
+    background-color: #ddd;
+    border:1px solid #f8f8f8;
+}
+#perfmon .timeline .slice{
+    min-width:1px;
+    background-color: #0072C6;
+    height:1em;
+}
+
+#perfmon .ms {
+    font-size:70%;
+}
+
+#perfmon .close {
+    float:right;
+}
+
+#perfmon .chart {
+    margin-bottom:0.5em
+}
+
+#perfmon .chart svg text {
+    font: inherit;
+    fill: #555;
+}
+
+#perfmon g.tick text{
+    display:none;
+}
+
+#perfmon g.nv-axisMaxMin{
+    margin-top:1em;
+}
+
+#perfmon g.nv-x.nv-axis .nv-axisMaxMin text{
+    font-weight:normal;
+    font-size:90%;
+}
+
+#perfmon #perfmonPanels .information #versionstable table{
+    width: 49%;
+    float:left;
+}
+
+#perfmon #perfmonPanels .information #versionstable table:first-child{
+    margin-right: 2%;
+}
+
+#perfmon #perfmonPanels .information #versionstable table td{
+    width: 50%;
+}
+
+#perfmon #perfmonPanels .information #timetable table tr td:first-child{
+    width: 66%;
+}
+
+#perfmon .nvtooltip p {
+  margin: 0;
+  padding: 5px 5px 14px;
+  text-align: center;
+}
+
+#perfmon .nvtooltip span {
+  display: inline-block;
+  margin: 2px 0;
+}
+
+#perfmon .nvtooltip table {
+  margin: 0Px;
+  border-spacing:0;
+}
+
+#perfmon .nvtooltip table td {
+  padding: 2px 9px 2px 0;
+  vertical-align: middle;
+}
+
+#perfmon .nvtooltip table td.key {
+  font-weight:normal;
+}
+
+#perfmon #perfmon .nvtooltip table td.value {
+  text-align: right;
+  font-weight: bold;
+}

@@ -1,0 +1,225 @@
+<?php
+
+/**
+ * ProcessWire 2.5+ Module
+ * Copyright 2014-2016, Keene State College 
+ * Released under MIT license: http://opensource.org/licenses/MIT 
+ */
+
+/****************************************************************************************************/
+
+class DebugPerfmon extends WireData implements Module {
+
+    public function __construct(){
+        
+    }
+    
+    /**
+     * get past PHP and PW required versions
+     */
+    public function ___install(){
+        
+        if(ProcessWire::versionMajor == 2 && ProcessWire::versionMinor < 5) {
+            throw new WireException("This module requires ProcessWire 2.5 or newer (assumes PDO usage).");
+        }
+        
+        if(version_compare(PHP_VERSION, '5.4.0') == -1) {
+            throw new WireException("This module requires PHP 5.4+ or newer (REQUEST_TIME_FLOAT usage).");
+        }
+        
+        // if you've not errored-out, you're ok.
+        
+    }
+    
+    /************************************************************************************************/
+
+    /**
+     * getModuleInfo is a module required by all modules to tell ProcessWire about them
+     *
+     * @return array
+     *
+     */
+    public static function getModuleInfo(){
+        return array(
+            'title' => 'Perfmon Debug Toolbar',
+            'version' => 100,
+            'summary' => 'Collects and displays debug information in a handy toolbar.',
+            'href' => 'http://www.keene.edu',
+            'singular' => true,
+            'autoload' => true,
+        );
+    }
+
+    /**
+     * adds template time, which is the division of bootstrap and template timings
+     * hooked on Page::render
+     */
+    public function addTime(){ 
+        // only want the first handoff, calls can be nested
+        if(!isset($this->data['timings']['request']['template'])){
+            $this->data['timings']['request']['template'] = microtime(true);
+        }
+    }
+    
+    /**
+     * collects mysql timings from mysql profiler -- does not include connection
+     * or network overhead. PDO can't wrap timings as conveniently as mysqli, which
+     * is why this approach is used.
+     */
+    public function addProfiles(){
+        // this can be called more than once as mysql caps out at 100
+        // assumes one shared PDO connection for all page queries
+        $profiles = $this->database->query('SHOW PROFILES;')->fetchAll();
+        $sql =& $this->data['timings']['sql'];
+        foreach($profiles as $profile){
+            $qid = intval($profile['Query_ID']);
+            if(!isset($sql[$qid])){
+                $sql[$qid] = array(
+                    "id"=> $qid,
+                    "time"=> floatval($profile['Duration']),
+                    "statement"=> $profile['Query']
+                );
+            }
+        }
+    }
+    
+    /**
+     * assemble output and print to browser after page has been generated.
+     */
+    public function generate(){
+        
+        // make sure this is an html response before soiling json or xml validity
+        $headers = headers_list();
+        foreach($headers as $header){
+            if (substr(strtolower($header), 0, 13) === "content-type:"){
+                $value = substr($header, 14);
+                $trunc = trim(explode(';',$value)[0]);
+                if(strtolower($trunc) !== 'text/html'){
+                    return;
+                }else{
+                    break;
+                }
+             }
+        }
+        
+        // the final timer, will be used to calculate request and template times
+        $this->data['timings']['request']['end'] = microtime(true);
+        
+        // add required styles
+        $this->data["stylesheet"] = array(
+            $this->style = $this->config->urls->siteModules.'/DebugPerfmon/styles/perfmon.css',
+            $this->style = $this->config->urls->siteModules.'/DebugPerfmon/styles/nv.d3.min.css'
+        );
+        
+        // make sure final sql queries are accounted for
+        $this->addProfiles();
+        
+        // remove keys, they were only used to keep track of which queries were captured
+        $this->data['timings']['sql'] = array_values($this->data['timings']['sql']);
+        
+        // hook lister, use ksort($hooks) if need be
+        $this->data['hooks'] = array();
+        $hooks = array_merge(wire()->getHooks('*'), Wire::$allLocalHooks); 
+        foreach($hooks as $key => $hook) {
+            $this->data['hooks'][] = array(
+                'class' => $hook['options']['fromClass'],
+                'method' => $hook['toMethod'],
+                'priority' => $hook['options']['priority'],
+                'after' => $hook['options']['after'],
+                'before' => $hook['options']['before'],
+                'type' => $hook['options']['type']
+            );
+        }
+        
+        $this->data['versions'] = array(
+            'php'=> phpversion(),
+            'processwire'=> $this->config->versionName,
+            'modules'=> array(),
+            'phpext'=> array()
+        );
+        
+        $modules = $this->wire->modules;
+        foreach($modules as $module) {
+            if($module instanceof ModulePlaceholder) {
+                continue; 
+            }
+            $info = $modules->getModuleInfo($module, array('verbose' => false));
+            $this->data['versions']['modules'][] = array($info['name'], $info['version']);
+            
+        }
+        
+        $exts = get_loaded_extensions();
+        foreach($exts as $ext){
+            $vers = phpversion($ext);
+            if(!$vers){
+                $vers = '--';
+            }else{
+                $vers = explode('$Id',$vers)[0];
+                $vers = explode(' - ',$vers)[0];
+                $vers = trim($vers);
+            }
+            $this->data['versions']['phpext'][] = array($ext, $vers);
+        }
+        
+        $this->data['timings']['custom'] = array();
+        $timers = Debug::getSavedTimers();
+        foreach($timers as $name => $timer){
+             $this->data['timings']['custom'][$name] = floatval($timer);
+        }
+        
+        // print it to the browser
+        $output = array();
+        $output[] = '';
+        $output[] = '';
+        $output[] = '<!-- DebugPerfmon begin -->   ';
+        $output[] = '<script type="text/javascript">if(typeof jQuery == "undefined"){document.write(\'<script type="text/javascript" src="'.$this->config->urls->siteModules.'/DebugPerfmon/scripts/jquery-2.2.1.min.js"></\'+\'script>\');}</script>';
+        $output[] = '<script type="text/javascript" src="'.$this->config->urls->siteModules.'/DebugPerfmon/scripts/nvd3.bundle.min.js"></script>';
+        $output[] = '<script type="text/javascript" src="'.$this->config->urls->siteModules.'/DebugPerfmon/scripts/perfmon.js"></script>';
+        $output[] = '<script>perfmon.init('.json_encode($this->data).');</script>';
+        $output[] = '<!-- DebugPerfmon end-->';
+        
+        print(implode($output,"\n"));
+        
+    }
+    
+    /**
+     * only engages toolbar when in debug mode. 
+     * output will invalidate json, do not engage when returning json response
+     */
+    public function init(){
+        
+        if($this->config->debug === true && !$this->config->ajax){
+            
+            // configure mysql profile with maximum profile history (100)
+            $profiler = $this->database->query('SHOW SESSION VARIABLES WHERE Variable_name="profiling"')->fetch()['Value'];
+            if(!($profiler == 1 || $profiler == 'ON')){
+                $this->database->query('SET profiling=ON;');
+                $this->database->query('SET profiling_history_size = 100;');
+            }
+            
+            // set up timings capture object
+            $this->data['timings'] = array(
+                'request' => array(
+                    'start' => $_SERVER['REQUEST_TIME_FLOAT']
+                ),
+                'sql' => array()
+            );
+            
+            $this->data['hooks'] = array();
+            
+            // separate PW bootstraping from template rendering
+            $this->session->addHookBefore('Page::render', $this, 'addTime');
+            
+            // pages find is the only hook that gets called frequently enough
+            // to not drop SQL within the context of a 100 item history (limit)
+            // there is likely a better way to handle this without potentially
+            // dropping queries.
+            $this->session->addHookBefore('Pages::find', $this, 'addProfiles');
+            
+            // output result of generate() after render
+            register_shutdown_function(array($this, 'generate'));
+            
+        }
+    }
+
+}
