@@ -216,7 +216,7 @@ perfmon.init = function(data){
     perfmon.elements.handle = perfmon.render.handle();
     perfmon.elements.toolbar = perfmon.render.toolbar();
     perfmon.elements.panels = perfmon.render.panels();
-    perfmon.elements.main = $('<div id="perfmon"></div>');
+    perfmon.elements.main = $('<div id="perfmon" style="display:none"></div>');
     perfmon.elements.main.append(perfmon.elements.handle);
     perfmon.elements.main.append(perfmon.elements.toolbar);
     perfmon.elements.main.append(perfmon.elements.panels);
@@ -228,7 +228,8 @@ perfmon.init = function(data){
         perfmon.toggle();
     }
     
-    // delay chart rendering until panel is requested
+    // handle FOUC, give appended stylesheets a frame to register
+    window.requestAnimationFrame(function(){perfmon.elements.main.show()});
     
 };
 

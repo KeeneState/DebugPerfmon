@@ -6,6 +6,7 @@
  * Released under MIT license: http://opensource.org/licenses/MIT
  * v1.0.0 initial release
  * v1.0.1 fix for PW 3.0 compatibility on call to get local hooks, thanks Adrian
+ * v1.0.2 fix for FOUC in admin
  */
 
 /****************************************************************************************************/
@@ -44,7 +45,7 @@ class DebugPerfmon extends WireData implements Module {
     public static function getModuleInfo(){
         return array(
             'title' => 'Perfmon Debug Toolbar',
-            'version' => 101,
+            'version' => 102,
             'summary' => 'Collects and displays debug information in a handy toolbar.',
             'href' => 'https://github.com/KeeneState/DebugPerfmon',
             'singular' => true,
