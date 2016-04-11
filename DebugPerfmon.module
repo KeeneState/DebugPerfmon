@@ -3,7 +3,9 @@
 /**
  * ProcessWire 2.5+ Module
  * Copyright 2014-2016, Keene State College 
- * Released under MIT license: http://opensource.org/licenses/MIT 
+ * Released under MIT license: http://opensource.org/licenses/MIT
+ * v1.0.0 initial release
+ * v1.0.1 fix for PW 3.0 compatibility on call to get local hooks, thanks Adrian
  */
 
 /****************************************************************************************************/
@@ -42,7 +44,7 @@ class DebugPerfmon extends WireData implements Module {
     public static function getModuleInfo(){
         return array(
             'title' => 'Perfmon Debug Toolbar',
-            'version' => 100,
+            'version' => 101,
             'summary' => 'Collects and displays debug information in a handy toolbar.',
             'href' => 'https://github.com/KeeneState/DebugPerfmon',
             'singular' => true,
@@ -119,7 +121,9 @@ class DebugPerfmon extends WireData implements Module {
         
         // hook lister, use ksort($hooks) if need be
         $this->data['hooks'] = array();
-        $hooks = array_merge(wire()->getHooks('*'), Wire::$allLocalHooks); 
+        $local_hooks = wire('config')->version >= 3 ? wire('hooks')->getAllLocalHooks() : Wire::$allLocalHooks;
+        $hooks = array_merge(wire('pages')->getHooks('*'), $local_hooks);
+        
         foreach($hooks as $key => $hook) {
             $this->data['hooks'][] = array(
                 'class' => $hook['options']['fromClass'],
