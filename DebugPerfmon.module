@@ -6,7 +6,7 @@
  * Released under MIT license: http://opensource.org/licenses/MIT
  * v1.0.0 initial release
  * v1.0.1 fix for PW 3.0 compatibility on call to get local hooks, thanks Adrian
- * v1.0.2 fix for FOUC in admin
+ * v1.0.2-3 fix for FOUC in admin
  */
 
 /****************************************************************************************************/
@@ -45,7 +45,7 @@ class DebugPerfmon extends WireData implements Module {
     public static function getModuleInfo(){
         return array(
             'title' => 'Perfmon Debug Toolbar',
-            'version' => 102,
+            'version' => 103,
             'summary' => 'Collects and displays debug information in a handy toolbar.',
             'href' => 'https://github.com/KeeneState/DebugPerfmon',
             'singular' => true,
@@ -110,8 +110,8 @@ class DebugPerfmon extends WireData implements Module {
         
         // add required styles
         $this->data["stylesheet"] = array(
-            $this->style = $this->config->urls->siteModules.'/DebugPerfmon/styles/perfmon.css',
-            $this->style = $this->config->urls->siteModules.'/DebugPerfmon/styles/nv.d3.min.css'
+            $this->style = $this->config->urls->siteModules.'DebugPerfmon/styles/perfmon.css',
+            $this->style = $this->config->urls->siteModules.'DebugPerfmon/styles/nv.d3.min.css'
         );
         
         // make sure final sql queries are accounted for
@@ -177,9 +177,9 @@ class DebugPerfmon extends WireData implements Module {
         $output[] = '';
         $output[] = '';
         $output[] = '<!-- DebugPerfmon begin -->   ';
-        $output[] = '<script type="text/javascript">if(typeof jQuery == "undefined"){document.write(\'<script type="text/javascript" src="'.$this->config->urls->siteModules.'/DebugPerfmon/scripts/jquery-2.2.1.min.js"></\'+\'script>\');}</script>';
-        $output[] = '<script type="text/javascript" src="'.$this->config->urls->siteModules.'/DebugPerfmon/scripts/nvd3.bundle.min.js"></script>';
-        $output[] = '<script type="text/javascript" src="'.$this->config->urls->siteModules.'/DebugPerfmon/scripts/perfmon.js"></script>';
+        $output[] = '<script type="text/javascript">if(typeof jQuery == "undefined"){document.write(\'<script type="text/javascript" src="'.$this->config->urls->siteModules.'DebugPerfmon/scripts/jquery-2.2.1.min.js"></\'+\'script>\');}</script>';
+        $output[] = '<script type="text/javascript" src="'.$this->config->urls->siteModules.'DebugPerfmon/scripts/nvd3.bundle.min.js"></script>';
+        $output[] = '<script type="text/javascript" src="'.$this->config->urls->siteModules.'DebugPerfmon/scripts/perfmon.js"></script>';
         $output[] = '<script>perfmon.init('.json_encode($this->data).');</script>';
         $output[] = '<!-- DebugPerfmon end-->';
         

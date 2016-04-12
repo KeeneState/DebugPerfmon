@@ -201,16 +201,6 @@ perfmon.init = function(data){
     // set history
     perfmon.ls.set(rt, tt, sqlr.total_time, sqlr.total_queries, perfmon.data.hooks.length);
     
-    // use existing jquery if possible
-    if (typeof(jQuery) === "undefined"){
-        document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>');
-    }
-    
-    // add styles
-    for(var i=0;i<perfmon.data.stylesheet.length;i++){
-        $('head').append('<link rel="stylesheet" type="text/css" href="'+perfmon.data.stylesheet[i]+'">');
-    }
-    
     var output = [];
     
     perfmon.elements.handle = perfmon.render.handle();
@@ -228,8 +218,26 @@ perfmon.init = function(data){
         perfmon.toggle();
     }
     
-    // handle FOUC, give appended stylesheets a frame to register
-    window.requestAnimationFrame(function(){perfmon.elements.main.show()});
+    // handle FOUC - stylesheet loader, when all stylesheets are loaded show() toolbar
+    var loader = {
+        count: perfmon.data.stylesheet.length,
+        sheets: {}
+    };
+    
+    // add styles and affix onload callback to keep track of loaded sheets
+    for(var i=0, len=loader.count; i < len; i++){
+        var href = perfmon.data.stylesheet[i];
+        loader.sheets[href] = false;
+        var stylesheet = $('<link rel="stylesheet" type="text/css" href="'+href+'">');
+        stylesheet.load(function(){
+            loader.sheets[this.getAttribute("href")] = true;
+            var values = $.map(loader.sheets, function(v){ return v;});
+            if(loader.count === values.length && values.indexOf(false) === -1){
+                perfmon.elements.main.show()
+            }
+        });
+        $('head').append(stylesheet);
+    }
     
 };
 
