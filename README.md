@@ -16,7 +16,7 @@ The toolbar interface was inspired by the great [django-debug-toolbar](https://g
 ### Installation
 
 1. drop the unzipped DebugPerfmon directory into site modules
-2. set debug to true in your development site's configuration — `$config->debug = true;`. Use care not to leak this value into production (a local configuration override is a good idea).
+2. set debug to true in your development site's configuration â€” `$config->debug = true;`. Use care not to leak this value into production (a local configuration override is a good idea).
 2. login to the admin, go to modules, refresh and click install
 
 You should immediately see the collapsed toolbar in the upper right of the screen.
@@ -31,8 +31,8 @@ Page historical data is stored in the browser's localStorage. Clearing the brows
 
 A collapsed toolbar in the upper right hand corner of the screen.
 
-![screencap](http://www.keene.edu/ksc/assets/files/26766/collapsed.png?rev2)
+![screencap](https://www.keene.edu/assets/images/1515012246422/original/)
 
 The expanded toolbar, viewing the timings panel.
 
-![screencap](http://www.keene.edu/ksc/assets/files/26766/timings.png?rev2)
+![screencap](https://www.keene.edu/assets/images/1515012273090/original/)
