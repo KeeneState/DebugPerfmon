@@ -1,4 +1,4 @@
-/* Copyright 2014-2016, Keene State College 
+/* Copyright 2014-2018, Keene State College 
 Released under MIT license: http://opensource.org/licenses/MIT */
 
 "use strict";
