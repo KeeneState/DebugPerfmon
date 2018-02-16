@@ -10,8 +10,8 @@ The toolbar interface was inspired by the great [django-debug-toolbar](https://g
 
 ### Requirements
 
-* PHP >=5.4 (uses REQUEST\_TIME\_FLOAT)
-* Processwire >=2.5 
+* PHP >=5.6 (uses REQUEST\_TIME\_FLOAT)
+* Processwire >=3.0 
 
 ### Installation
 

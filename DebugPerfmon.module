@@ -1,4 +1,4 @@
-<?php
+<?php namespace ProcessWire;
 
 /**
  * ProcessWire 2.5+ Module
@@ -7,6 +7,7 @@
  * v1.0.0 initial release
  * v1.0.1 fix for PW 3.0 compatibility on call to get local hooks, thanks Adrian
  * v1.0.2-3 fix for FOUC in admin
+ * v1.1.0 jquery 3.x compatibility fixes, rev nvd3, require processwire 3.x and php 5.6 (no longer testing pre-5.6)
  */
 
 /****************************************************************************************************/
@@ -22,12 +23,12 @@ class DebugPerfmon extends WireData implements Module {
      */
     public function ___install(){
         
-        if(ProcessWire::versionMajor == 2 && ProcessWire::versionMinor < 5) {
-            throw new WireException("This module requires ProcessWire 2.5 or newer (assumes PDO usage).");
+        if(ProcessWire::versionMajor == 3 && ProcessWire::versionMinor < 0) {
+            throw new WireException("This module requires ProcessWire 3.0 or newer.");
         }
         
-        if(version_compare(PHP_VERSION, '5.4.0') == -1) {
-            throw new WireException("This module requires PHP 5.4+ or newer (REQUEST_TIME_FLOAT usage).");
+        if(version_compare(PHP_VERSION, '5.6.0') == -1) {
+            throw new WireException("This module requires PHP 5.6+ or newer.");
         }
         
         // if you've not errored-out, you're ok.
@@ -177,7 +178,7 @@ class DebugPerfmon extends WireData implements Module {
         $output[] = '';
         $output[] = '';
         $output[] = '<!-- DebugPerfmon begin -->   ';
-        $output[] = '<script type="text/javascript">if(typeof jQuery == "undefined"){document.write(\'<script type="text/javascript" src="'.$this->config->urls->siteModules.'DebugPerfmon/scripts/jquery-2.2.1.min.js"></\'+\'script>\');}</script>';
+        $output[] = '<script type="text/javascript">if(typeof $ == "undefined"){document.write(\'<script type="text/javascript" src="'.$this->config->urls->siteModules.'DebugPerfmon/scripts/jquery-3.3.1.min.js"></\'+\'script>\');}</script>';
         $output[] = '<script type="text/javascript" src="'.$this->config->urls->siteModules.'DebugPerfmon/scripts/nvd3.bundle.min.js"></script>';
         $output[] = '<script type="text/javascript" src="'.$this->config->urls->siteModules.'DebugPerfmon/scripts/perfmon.js"></script>';
         $output[] = '<script>perfmon.init('.json_encode($this->data).');</script>';

@@ -131,7 +131,6 @@ perfmon.ls.set = function(request_time, template_time, query_time, query_count, 
         var iter = 0;
         for(var i=0, l=keys.length; i<l; i++){
             var key = keys[i];
-            console.log(key);
             delete val[key];
             if (++iter >= remove){
                 break;
@@ -229,11 +228,11 @@ perfmon.init = function(data){
         var href = perfmon.data.stylesheet[i];
         loader.sheets[href] = false;
         var stylesheet = $('<link rel="stylesheet" type="text/css" href="'+href+'">');
-        stylesheet.load(function(){
+        stylesheet.on("load", function(){
             loader.sheets[this.getAttribute("href")] = true;
             var values = $.map(loader.sheets, function(v){ return v;});
             if(loader.count === values.length && values.indexOf(false) === -1){
-                perfmon.elements.main.show()
+                perfmon.elements.main.show();
             }
         });
         $('head').append(stylesheet);
@@ -668,17 +667,17 @@ perfmon.render.charts = function(){
 perfmon.panel = function(name){
     
     var current = $('#perfmonPanels .section.'+name).is(":visible");
-    $('body > *').show();
-    $('#perfmonPanels').hide();
-    $('#perfmonPanels .section').hide();
+    $('body > *').not("script").css("display","block");
+    $('#perfmonPanels').css("display","none");
+    $('#perfmonPanels .section').css("display","none");
     $('.section').removeClass('active')
     
     if(name && !(current)){
         
-        $('body > *').hide();
-        $('#perfmon').show();
-        $('#perfmonPanels').show();
-        $('#perfmonPanels .section.'+name).show();
+        $('body > *').not("script").css("display","none");
+        $('#perfmon').css("display","block");
+        $('#perfmonPanels').css("display","block");
+        $('#perfmonPanels .section.'+name).css("display","block");
         $('.section.'+name).show().addClass('active');
         
         window.scrollTo(0,0);
@@ -703,14 +702,14 @@ perfmon.toggle = function(animate){
     var visible = perfmon.elements.toolbar.is(":visible");
     if(!visible){
         perfmon.ls.state(true);
-        perfmon.elements.toolbar.show();
+        perfmon.elements.toolbar.css("display","block");
         perfmon.elements.toolbar.animate({'right':0}, time);
         perfmon.elements.handle.fadeOut(time * 1.2);
     }else{
         perfmon.ls.state(false);
-        $('body > *').show();
+        $('body > *').not("script").css("display","block");
         perfmon.elements.toolbar.animate({'right':-(perfmon.elements.toolbar.width())}, time, function(){
-            $(this).hide();
+            $(this).css("display","none");
         });
         perfmon.elements.handle.fadeIn(time * 1.2);
         perfmon.elements.panels.fadeOut(time);
