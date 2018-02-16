@@ -2,7 +2,7 @@
 
 /**
  * ProcessWire 2.5+ Module
- * Copyright 2014-2016, Keene State College 
+ * Copyright 2014-2018, Keene State College 
  * Released under MIT license: http://opensource.org/licenses/MIT
  * v1.0.0 initial release
  * v1.0.1 fix for PW 3.0 compatibility on call to get local hooks, thanks Adrian
