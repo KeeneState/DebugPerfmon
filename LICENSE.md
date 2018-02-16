@@ -1,7 +1,7 @@
 ##DebugPerfmon 
 
 The MIT License (MIT)
-Copyright (c) 2014-2016 Keene State College
+Copyright (c) 2014-2018 Keene State College
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
