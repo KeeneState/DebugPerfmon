@@ -1,7 +1,7 @@
 <?php namespace ProcessWire;
 
 /**
- * ProcessWire 2.5+ Module
+ * ProcessWire 3.0+ Module
  * Copyright 2014-2018, Keene State College 
  * Released under MIT license: http://opensource.org/licenses/MIT
  * v1.0.0 initial release
