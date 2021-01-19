@@ -184,7 +184,7 @@ class DebugPerfmon extends WireData implements Module {
         $output[] = '<script>perfmon.init('.json_encode($this->data).');</script>';
         $output[] = '<!-- DebugPerfmon end-->';
         
-        print(implode($output,"\n"));
+        print(implode("\n", $output));
         
     }
     
